@@ -24,15 +24,18 @@ export async function GET(request: Request) {
   const forceGlobal = new URL(request.url).searchParams.get("scope") === "global";
   const guildId = forceGlobal ? undefined : process.env.DISCORD_DEV_GUILD_ID;
   try {
-    if (guildId) {
-      await registerGuildCommands(applicationId, guildId, [...commandDefinitions]);
-    } else {
-      await registerGlobalCommands(applicationId, [...commandDefinitions]);
-    }
+    // Capture Discord's own response (real command IDs) instead of just
+    // echoing our local definitions back - proves what Discord actually
+    // stored, rather than just that our PUT didn't throw.
+    const discordResponse = guildId
+      ? await registerGuildCommands(applicationId, guildId, [...commandDefinitions])
+      : await registerGlobalCommands(applicationId, [...commandDefinitions]);
+
     return NextResponse.json({
       status: "ok",
       scope: guildId ? `guild:${guildId}` : "global",
-      commands: commandDefinitions.map((c) => c.name),
+      applicationId,
+      discordResponse,
     });
   } catch (err) {
     console.error("Command registration failed:", err);
