@@ -1,0 +1,1 @@
+ALTER TABLE "practice_scenarios" ADD COLUMN "team_learning" text;
