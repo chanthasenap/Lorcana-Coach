@@ -52,6 +52,11 @@ export const commandDefinitions = [
     ],
   },
   {
+    name: "deck",
+    description: "Import a deck by pasting a decklist",
+    options: [],
+  },
+  {
     name: "help",
     description: "Show what the Lorcana Coach bot can do",
     options: [],

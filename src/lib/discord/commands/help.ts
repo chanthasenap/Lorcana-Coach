@@ -27,6 +27,10 @@ export async function handleHelp(_interaction: DiscordInteraction): Promise<Rout
             name: "/analyze",
             value: "`/analyze last [count]` or `/analyze matchup <opponent>` - AI breakdown of recent games or a specific matchup.",
           },
+          {
+            name: "/deck",
+            value: "Import a deck by pasting a decklist (one card per line) - your own deck or an opponent archetype.",
+          },
         ],
         footer: { text: "Every game you record makes future practice smarter." },
       },
