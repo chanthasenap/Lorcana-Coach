@@ -16,7 +16,13 @@ export async function GET(request: Request) {
     );
   }
 
-  const guildId = process.env.DISCORD_DEV_GUILD_ID;
+  // ?scope=global forces global registration regardless of
+  // DISCORD_DEV_GUILD_ID - an explicit escape hatch for cases where guild-
+  // scoped registration is stuck (e.g. Discord hasn't propagated the
+  // applications.commands OAuth grant for that guild yet), so this doesn't
+  // depend on correctly editing/redeploying env vars to unblock it.
+  const forceGlobal = new URL(request.url).searchParams.get("scope") === "global";
+  const guildId = forceGlobal ? undefined : process.env.DISCORD_DEV_GUILD_ID;
   try {
     if (guildId) {
       await registerGuildCommands(applicationId, guildId, [...commandDefinitions]);
