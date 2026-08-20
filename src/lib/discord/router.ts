@@ -6,6 +6,7 @@ import { handlePracticeCommand, handlePracticeComponent } from "./commands/pract
 import { handleCoachCommand, handleCoachComponent } from "./commands/coach";
 import { handleRecordCommand, handleRecordComponent, handleRecordModalSubmit } from "./commands/record";
 import { handleAnalyzeCommand } from "./commands/analyze";
+import { handleDeckCommand, handleDeckComponent, handleDeckModalSubmit } from "./commands/deck";
 
 export type RouteResult = {
   /** Sent synchronously as the interaction response (must happen within Discord's ~3s window). */
@@ -32,6 +33,8 @@ export async function routeInteraction(interaction: DiscordInteraction): Promise
         return handleRecordCommand(interaction);
       case "analyze":
         return handleAnalyzeCommand(interaction);
+      case "deck":
+        return handleDeckCommand(interaction);
       case "help":
         return handleHelp(interaction);
       default:
@@ -49,6 +52,9 @@ export async function routeInteraction(interaction: DiscordInteraction): Promise
     if (interaction.type === InteractionType.MODAL_SUBMIT && namespace === "record") {
       return handleRecordModalSubmit(interaction);
     }
+    if (interaction.type === InteractionType.MODAL_SUBMIT && namespace === "deck") {
+      return handleDeckModalSubmit(interaction);
+    }
 
     switch (namespace) {
       case "practice":
@@ -57,6 +63,8 @@ export async function routeInteraction(interaction: DiscordInteraction): Promise
         return handleCoachComponent(interaction);
       case "record":
         return handleRecordComponent(interaction);
+      case "deck":
+        return handleDeckComponent(interaction);
       default:
         return { immediate: messageResponse("This button/menu is no longer valid.", [], [], true) };
     }
